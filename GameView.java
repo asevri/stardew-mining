@@ -30,9 +30,13 @@ public class GameView extends JFrame {
             super.paintComponent(g);
             if (model == null) return;
 
-            // Background
-            g.setColor(new Color(40, 40, 40));
-            g.fillRect(0, 0, getWidth(), getHeight());
+            // Draw Walls
+            for (GameModel.Entity wall : model.getWalls()) {
+                g.setColor(Color.BLACK);
+                g.fillRect((int)wall.x, (int)wall.y, (int)wall.width, (int)wall.height);
+                g.setColor(new Color(60, 60, 60));
+                g.drawRect((int)wall.x, (int)wall.y, (int)wall.width, (int)wall.height);
+            }
 
             // Draw Ladder (if revealed)
             if (model.isLadderRevealed() && model.getLadder() != null) {
@@ -66,11 +70,6 @@ public class GameView extends JFrame {
                 }
             }
 
-            // Draw Hitbox (Visualization)
-            float[] hb = model.getHitbox();
-            g.setColor(new Color(255, 255, 0, 30));
-            g.fillRect((int)hb[0], (int)hb[1], (int)hb[2], (int)hb[3]);
-
             // Draw Player (Dwarf)
             g.setColor(new Color(0, 150, 0));
             int px = (int)model.getPlayerX();
@@ -79,7 +78,7 @@ public class GameView extends JFrame {
             g.fillRect(px, py, size, size);
 
             // Draw Facing Triangle
-            g.setColor(Color.WHITE);
+            g.setColor(model.isSwinging() ? Color.RED : Color.WHITE);
             int[] tx = new int[3];
             int[] ty = new int[3];
             int tSize = 8;

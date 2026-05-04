@@ -87,7 +87,25 @@ Fixes: Nothing to fix yet.
 
 Observation: Some rocks are half off the screen.
 
-## Prompt 5: Basic Model Testing
+## Prompt 5: Combat and Mining Interactions (Axe)
+Add a mining interaction and combat interaction. When player hits a rock with an axe, it breaks. When player hits a monster with an axe, it dies. When player hits a ladder with an axe, nothing should happen. When player uses axe show it by changing color of the triangle for a second. Add a wall around the playing window to prevent player from going off screen, and generate rocks/monsters inside the walls. If the player hits a wall with an axe, nothing should happen. Do not implement anything else. 
+
+Result: Weirdly it already tried adding walls (is it reading my prompts file?) It changed playing background to white, I hate it. Axe interaction works as expected.
+
+Fixes: Fix wall (only 3 out of 4 walls show up). Revert background to black.
+
+Observation: AI took some liberties to jump ahead anyway.
+
+## Prompt 6: Adding Wall
+Add a wall around the playing window to prevent player from going off screen, and generate rocks/monsters inside the walls. If the player hits a wall with an axe, nothing should happen.
+
+Result: 
+
+Fixes: 
+
+Observation: 
+
+## Prompt : Basic Model Testing
 
 Result: 
 

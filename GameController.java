@@ -37,6 +37,7 @@ public class GameController implements KeyListener, ActionListener {
 
         // Coordination Sequence
         model.updateMonsters();
+        model.updateSwing();
         
         view.render(model);
 

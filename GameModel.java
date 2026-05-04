@@ -15,13 +15,17 @@ public class GameModel {
     private Direction facing = Direction.DOWN;
 
     public enum Direction { UP, DOWN, LEFT, RIGHT }
-    public enum EntityType { ROCK, SLIME, BAT, LADDER }
+    public enum EntityType { ROCK, SLIME, BAT, LADDER, WALL }
 
     // Entities
     private List<Entity> rocks = new ArrayList<>();
     private List<Entity> monsters = new ArrayList<>();
+    private List<Entity> walls = new ArrayList<>();
     private Entity ladder;
     private boolean ladderRevealed = false;
+
+    // Interaction
+    private int axeTimer = 0;
 
     public static class Entity {
         public float x, y, width, height;
@@ -46,11 +50,19 @@ public class GameModel {
     public void generateLevel() {
         rocks.clear();
         monsters.clear();
+        walls.clear();
         ladderRevealed = false;
 
-        // Reset player to top-left
-        playerX = 20;
-        playerY = 20;
+        // Reset player to top-left (inside walls)
+        playerX = 40;
+        playerY = 40;
+
+        // 0. Generate Walls
+        float thickness = 32;
+        walls.add(new Entity(0, 0, WORLD_WIDTH, thickness, EntityType.WALL)); // Top
+        walls.add(new Entity(0, WORLD_HEIGHT - thickness, WORLD_WIDTH, thickness, EntityType.WALL)); // Bottom
+        walls.add(new Entity(0, 0, thickness, WORLD_HEIGHT, EntityType.WALL)); // Left
+        walls.add(new Entity(WORLD_WIDTH - thickness, 0, thickness, WORLD_HEIGHT, EntityType.WALL)); // Right
 
         // 1. Generate Rocks
         int rockCount = 20 + rand.nextInt(15); 
@@ -77,9 +89,10 @@ public class GameModel {
 
     private Entity createSafeEntity(EntityType type, float w, float h) {
         int attempts = 0;
+        float padding = 40; // Stay away from walls
         while (attempts < 100) {
-            float rx = rand.nextInt((int)(WORLD_WIDTH - w));
-            float ry = rand.nextInt((int)(WORLD_HEIGHT - h));
+            float rx = padding + rand.nextInt((int)(WORLD_WIDTH - w - padding * 2));
+            float ry = padding + rand.nextInt((int)(WORLD_HEIGHT - h - padding * 2));
 
             // Don't spawn on player
             if (new Entity(rx, ry, w, h, type).intersects(playerX - 20, playerY - 20, PLAYER_SIZE + 40, PLAYER_SIZE + 40)) {
@@ -87,21 +100,12 @@ public class GameModel {
                 continue;
             }
 
-            // Don't spawn on existing rocks
+            // Don't spawn on existing entities
             boolean overlaps = false;
-            for (Entity other : rocks) {
-                if (other.intersects(rx, ry, w, h)) {
-                    overlaps = true;
-                    break;
-                }
-            }
-            if (overlaps) {
-                attempts++;
-                continue;
-            }
-
-            // Don't spawn on existing monsters
-            for (Entity other : monsters) {
+            List<Entity> all = new ArrayList<>(rocks);
+            all.addAll(monsters);
+            all.addAll(walls);
+            for (Entity other : all) {
                 if (other.intersects(rx, ry, w, h)) {
                     overlaps = true;
                     break;
@@ -120,6 +124,10 @@ public class GameModel {
         // TODO: Handle AI pathing and aggro logic
     }
 
+    public void updateSwing() {
+        if (axeTimer > 0) axeTimer--;
+    }
+
     public void updatePlayer(float dx, float dy) {
         if (dx > 0) facing = Direction.RIGHT;
         else if (dx < 0) facing = Direction.LEFT;
@@ -133,26 +141,27 @@ public class GameModel {
         boolean blockedX = false;
         boolean blockedY = false;
 
-        for (Entity rock : rocks) {
-            if (rock.type == EntityType.ROCK) {
-                // Check X movement
-                if (rock.intersects(nextX, playerY, PLAYER_SIZE, PLAYER_SIZE)) {
-                    blockedX = true;
-                    // Forgiveness logic: If mostly past the rock vertically, slide
-                    float overlapTop = (playerY + PLAYER_SIZE) - rock.y;
-                    float overlapBottom = (rock.y + rock.height) - playerY;
-                    if (overlapTop < PLAYER_SIZE * 0.2f) playerY -= overlapTop;
-                    else if (overlapBottom < PLAYER_SIZE * 0.2f) playerY += overlapBottom;
-                }
-                // Check Y movement
-                if (rock.intersects(playerX, nextY, PLAYER_SIZE, PLAYER_SIZE)) {
-                    blockedY = true;
-                    // Forgiveness logic: If mostly past the rock horizontally, slide
-                    float overlapLeft = (playerX + PLAYER_SIZE) - rock.x;
-                    float overlapRight = (rock.x + rock.width) - playerX;
-                    if (overlapLeft < PLAYER_SIZE * 0.2f) playerX -= overlapLeft;
-                    else if (overlapRight < PLAYER_SIZE * 0.2f) playerX += overlapRight;
-                }
+        List<Entity> solidEntities = new ArrayList<>(rocks);
+        solidEntities.addAll(walls);
+
+        for (Entity solid : solidEntities) {
+            // Check X movement
+            if (solid.intersects(nextX, playerY, PLAYER_SIZE, PLAYER_SIZE)) {
+                blockedX = true;
+                // Forgiveness logic: If mostly past the rock vertically, slide
+                float overlapTop = (playerY + PLAYER_SIZE) - solid.y;
+                float overlapBottom = (solid.y + solid.height) - playerY;
+                if (overlapTop < PLAYER_SIZE * 0.2f) playerY -= overlapTop;
+                else if (overlapBottom < PLAYER_SIZE * 0.2f) playerY += overlapBottom;
+            }
+            // Check Y movement
+            if (solid.intersects(playerX, nextY, PLAYER_SIZE, PLAYER_SIZE)) {
+                blockedY = true;
+                // Forgiveness logic: If mostly past the rock horizontally, slide
+                float overlapLeft = (playerX + PLAYER_SIZE) - solid.x;
+                float overlapRight = (solid.x + solid.width) - playerX;
+                if (overlapLeft < PLAYER_SIZE * 0.2f) playerX -= overlapLeft;
+                else if (overlapRight < PLAYER_SIZE * 0.2f) playerX += overlapRight;
             }
         }
 
@@ -191,9 +200,32 @@ public class GameModel {
     }
 
     public void handleAction() {
+        axeTimer = 30; // ~0.5 seconds at 60fps
         float[] hb = getHitbox();
-        // TODO: Interaction check with entities in hb
+        
+        // Check Rocks
+        for (int i = rocks.size() - 1; i >= 0; i--) {
+            Entity r = rocks.get(i);
+            if (r.intersects(hb[0], hb[1], hb[2], hb[3])) {
+                if (r.containsLadder) ladderRevealed = true;
+                rocks.remove(i);
+                oreCount++;
+                return; // Hit one rock per swing
+            }
+        }
+
+        // Check Monsters
+        for (int i = monsters.size() - 1; i >= 0; i--) {
+            Entity m = monsters.get(i);
+            if (m.intersects(hb[0], hb[1], hb[2], hb[3])) {
+                monsters.remove(i);
+                return; // Hit one monster per swing
+            }
+        }
     }
+
+    public List<Entity> getWalls() { return walls; }
+    public boolean isSwinging() { return axeTimer > 0; }
 
     public boolean isGameOver() { return health <= 0; }
     public boolean isWin() { return currentFloor >= 5 || oreCount >= 100; }
