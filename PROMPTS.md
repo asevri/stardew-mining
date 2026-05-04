@@ -5,6 +5,8 @@
     - Add collision between player and monsters, and rocks and monsters (except bats). - DONE
     - Add range of generated rocks/monsters, not too much, not too little.
     - Fix health bar to not go past zero.
+    - Add tests to make sure that the game is working as expected.
+    - When player gets knocked back from a monster, it should not get stuck on walls or rocks.
 - To Make It More Fun:
     - Make a mine dark and only light up the area around the player.
     - Add a counter to track the number of monsters killed. Display the count on the HUD.
@@ -135,7 +137,47 @@ Fixes: Need to fix knockback from monsters because it can cause player to get st
 
 Observation: Game has become sophisticated and needs testing.
 
-## Prompt : Basic Model Testing
+## Prompt 10: Fixing Knockback Issue
+
+Result: 
+
+Fixes: 
+
+Observation:
+
+## Prompt 11: Fix Health Bar To Not Go Past Zero
+
+Result: 
+
+Fixes: 
+
+Observation:
+
+## Prompt 12: Add Monster Kill Counter
+
+Result: 
+
+Fixes: 
+
+Observation:
+
+## Prompt 13: Add 10 min Timer
+
+Result: 
+
+Fixes: 
+
+Observation:
+
+## Prompt 14: Testing The Game
+
+Result: 
+
+Fixes: 
+
+Observation:
+
+## Prompt 15: Adding Darkness
 
 Result: 
 
