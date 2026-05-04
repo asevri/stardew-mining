@@ -1,11 +1,14 @@
 ## Implementation To Do List
 - Basic:
-    - Make sure player starts at the same position on every floor (top left corner).
-    - Add a wall around the playing window to prevent player from going off screen.
-    - Add collision between player and monsters, and rocks and monsters (except bats).
+    - Make sure player starts at the same position on every floor (top left corner). - DONE
+    - Add a wall around the playing window to prevent player from going off screen. - DONE
+    - Add collision between player and monsters, and rocks and monsters (except bats). - DONE
     - Add range of generated rocks/monsters, not too much, not too little.
+    - Fix health bar to not go past zero.
 - To Make It More Fun:
     - Make a mine dark and only light up the area around the player.
+    - Add a counter to track the number of monsters killed. Display the count on the HUD.
+    - Add a timer countdown. When time runs out, you lose.
 
 
 ## Prompt 1: The MVC Skeleton
@@ -114,14 +117,14 @@ Fixes: None
 
 Observation: Add a count of Monsters killed for fun.
 
-## Prompt 8: 
+## Prompt 8: Adding Win and Loose Conditions
+Implement win and loose conditions in GameModel.java. Player wins when they reach floor 5 or collect 100 ores. Player loses when their health reaches 0. When player loses, show "GAME OVER". When player wins, show "YOU WIN!". If both conditions are met at the same time player looses and show "Winning does not matter if you die at the same time." message. Do not implement anything else.
 
+Result: Died successfully.
 
-Result: 
+Fixes: None.
 
-Fixes: 
-
-Observation: 
+Observation: Health bar went past zero, minor issue at the moment.
 
 ## Prompt : Basic Model Testing
 

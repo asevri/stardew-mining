@@ -219,6 +219,16 @@ public class GameModel {
 
         if (!blockedX) playerX = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_SIZE, nextX));
         if (!blockedY) playerY = Math.max(0, Math.min(WORLD_HEIGHT - PLAYER_SIZE, nextY));
+
+        // Ladder Collision (Next Floor)
+        if (ladderRevealed && ladder != null) {
+            if (ladder.intersects(playerX, playerY, PLAYER_SIZE, PLAYER_SIZE)) {
+                currentFloor++;
+                if (currentFloor < 5) {
+                    generateLevel();
+                }
+            }
+        }
     }
 
     public void applyKnockback(float sourceX, float sourceY) {
