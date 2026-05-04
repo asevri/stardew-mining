@@ -2,6 +2,7 @@
 - Basic:
     - Make sure player starts at the same position on every floor (top left corner).
     - Add a wall around the playing window to prevent player from going off screen.
+    - Add collision between player and monsters, and rocks and monsters (except bats).
 - To Make It More Fun:
     - Make a mine dark and only light up the area around the player.
 
@@ -64,13 +65,17 @@ Fixes: The player no longer starts at the top left corner. Fix it later, not a p
 Observation: It might be bettwe to add a wall around the playing window to prevent player from going off screen. Implement it later.
 
 ## Prompt 3: Building the View
-
+Fill in GameView.java with all the UI and visuals of the game based on the design document. That includes the HUD, the player, the rocks, monsters, the ladder, and the win/loss screens. Do not implement anything else. Do not implement combat or controller.
 
 Result: 
+    Rocks: Solid gray blocks with dark outlines.
+    Slimes: Rendered as vibrant green circles.
+    Bats: Rendered as dark purple squares with a diagonal "wing" line.
+    Ladder: Drawn as a brown wooden structure with yellow rungs (revealed when a rock is broken).
 
-Fixes: 
+Fixes: Nothing to fix yet.
 
-Observation: 
+Observation: Good start, need to add playable features. Also add collision between player and monsters, and rocks and monsters (except bats).
 
 ## Prompt 4: Wiring the Controller 
 

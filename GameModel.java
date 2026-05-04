@@ -15,17 +15,22 @@ public class GameModel {
     private Direction facing = Direction.DOWN;
 
     public enum Direction { UP, DOWN, LEFT, RIGHT }
+    public enum EntityType { ROCK, SLIME, BAT, LADDER }
 
     // Entities
     private List<Entity> rocks = new ArrayList<>();
     private List<Entity> monsters = new ArrayList<>();
+    private Entity ladder;
+    private boolean ladderRevealed = false;
 
     public static class Entity {
         public float x, y, width, height;
-        public boolean isRock;
-        public Entity(float x, float y, float w, float h, boolean isRock) {
+        public EntityType type;
+        public boolean containsLadder;
+
+        public Entity(float x, float y, float w, float h, EntityType type) {
             this.x = x; this.y = y; this.width = w; this.height = h;
-            this.isRock = isRock;
+            this.type = type;
         }
         public boolean intersects(float ex, float ey, float ew, float eh) {
             return x < ex + ew && x + width > ex && y < ey + eh && y + height > ey;
@@ -37,7 +42,18 @@ public class GameModel {
     }
 
     public void generateLevel() {
-        // Placeholder for now
+        rocks.clear();
+        monsters.clear();
+        
+        // Add some dummy entities for visual testing
+        rocks.add(new Entity(200, 200, 32, 32, EntityType.ROCK));
+        rocks.add(new Entity(240, 200, 32, 32, EntityType.ROCK));
+        
+        monsters.add(new Entity(400, 300, 32, 32, EntityType.SLIME));
+        monsters.add(new Entity(500, 100, 32, 32, EntityType.BAT));
+        
+        ladder = new Entity(300, 300, 32, 32, EntityType.LADDER);
+        ladderRevealed = true; // Show for testing
     }
 
     public void updateMonsters() {
@@ -58,7 +74,7 @@ public class GameModel {
         boolean blockedY = false;
 
         for (Entity rock : rocks) {
-            if (rock.isRock) {
+            if (rock.type == EntityType.ROCK) {
                 // Check X movement
                 if (rock.intersects(nextX, playerY, PLAYER_SIZE, PLAYER_SIZE)) {
                     blockedX = true;
@@ -122,6 +138,11 @@ public class GameModel {
     public boolean isGameOver() { return health <= 0; }
     public boolean isWin() { return currentFloor >= 5 || oreCount >= 100; }
 
+    public List<Entity> getRocks() { return rocks; }
+    public List<Entity> getMonsters() { return monsters; }
+    public Entity getLadder() { return ladder; }
+    public boolean isLadderRevealed() { return ladderRevealed; }
+    
     public float getPlayerX() { return playerX; }
     public float getPlayerY() { return playerY; }
     public int getHealth() { return health; }
