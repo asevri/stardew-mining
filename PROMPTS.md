@@ -126,6 +126,15 @@ Fixes: None.
 
 Observation: Health bar went past zero, minor issue at the moment.
 
+## Prompt 9: Floor Transition
+Implement a floor transition in GameModel.java. When player walks over the ladder, regenerate the level with new rocks and monsters. Reset player position to top left corner. Update floor counter. Make sure there are no overlaps of any entities. Do not implement anything else. 
+
+Result: Implemented floor transition.
+
+Fixes: Need to fix knockback from monsters because it can cause player to get stuck on walls or rocks.
+
+Observation: Game has become sophisticated and needs testing.
+
 ## Prompt : Basic Model Testing
 
 Result: 

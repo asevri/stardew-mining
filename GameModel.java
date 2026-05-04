@@ -161,7 +161,7 @@ public class GameModel {
 
             // 3. Collision with Player (Damage & Knockback)
             if (m.intersects(playerX, playerY, PLAYER_SIZE, PLAYER_SIZE)) {
-                health -= 10;
+                health = Math.max(0, health - 10);
                 applyKnockback(m.x, m.y);
                 
                 // Knockback monster away from player
