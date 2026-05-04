@@ -106,15 +106,22 @@ Fixes: None
 Observation: No new liberties were taken this time.
 
 ## Prompt 7: Implement Monster AI
-Implement basic AI for slimes and bats in GameModel.java. Make them randomly move around the screen. Do not implement anything else.
+Implement basic AI for slimes and bats in GameModel.java. Make monsters move with speed of 1/3 of player speed. Make monsters start moving towards the player when they get close, within 5 lengths of player size. Add damage to player when monsters touch them. Add knockback to player and monster when monsters touch them. Monsters should not be able to move through walls, rocks or other monsters. Do not implement anything else.
+
+Result: Knockback works! Monsters start moving at good distance. Health is deducted.
+
+Fixes: None
+
+Observation: Add a count of Monsters killed for fun.
+
+## Prompt 8: 
+
 
 Result: 
 
 Fixes: 
 
 Observation: 
-
-££
 
 ## Prompt : Basic Model Testing
 

@@ -121,7 +121,59 @@ public class GameModel {
     }
 
     public void updateMonsters() {
-        // TODO: Handle AI pathing and aggro logic
+        float monsterSpeed = 4f / 3f; // 1/3 of player speed
+        float aggroRange = PLAYER_SIZE * 5;
+
+        for (int i = 0; i < monsters.size(); i++) {
+            Entity m = monsters.get(i);
+            
+            // 1. Calculate distance to player
+            float dx = playerX - m.x;
+            float dy = playerY - m.y;
+            float dist = (float)Math.sqrt(dx*dx + dy*dy);
+
+            // 2. Chasing logic
+            if (dist < aggroRange && dist > 0) {
+                float moveX = (dx / dist) * monsterSpeed;
+                float moveY = (dy / dist) * monsterSpeed;
+                
+                float nextX = m.x + moveX;
+                float nextY = m.y + moveY;
+
+                // Check collisions with Rocks, Walls, and OTHER monsters
+                boolean blockedX = false;
+                boolean blockedY = false;
+                
+                List<Entity> obstacles = new ArrayList<>(rocks);
+                obstacles.addAll(walls);
+                for (int j = 0; j < monsters.size(); j++) {
+                    if (i != j) obstacles.add(monsters.get(j));
+                }
+
+                for (Entity obs : obstacles) {
+                    if (obs.intersects(nextX, m.y, m.width, m.height)) blockedX = true;
+                    if (obs.intersects(m.x, nextY, m.width, m.height)) blockedY = true;
+                }
+
+                if (!blockedX) m.x = nextX;
+                if (!blockedY) m.y = nextY;
+            }
+
+            // 3. Collision with Player (Damage & Knockback)
+            if (m.intersects(playerX, playerY, PLAYER_SIZE, PLAYER_SIZE)) {
+                health -= 10;
+                applyKnockback(m.x, m.y);
+                
+                // Knockback monster away from player
+                float kx = m.x - playerX;
+                float ky = m.y - playerY;
+                float kMag = (float)Math.sqrt(kx*kx + ky*ky);
+                if (kMag > 0) {
+                    m.x += (kx / kMag) * PLAYER_SIZE * 2;
+                    m.y += (ky / kMag) * PLAYER_SIZE * 2;
+                }
+            }
+        }
     }
 
     public void updateSwing() {
