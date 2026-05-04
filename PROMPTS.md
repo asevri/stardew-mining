@@ -3,6 +3,7 @@
     - Make sure player starts at the same position on every floor (top left corner).
     - Add a wall around the playing window to prevent player from going off screen.
     - Add collision between player and monsters, and rocks and monsters (except bats).
+    - Add range of generated rocks/monsters, not too much, not too little.
 - To Make It More Fun:
     - Make a mine dark and only light up the area around the player.
 
@@ -77,14 +78,14 @@ Fixes: Nothing to fix yet.
 
 Observation: Good start, need to add playable features. Also add collision between player and monsters, and rocks and monsters (except bats).
 
-## Prompt 4: Wiring the Controller 
+## Prompt 4: Random Level Generation
+Implement random level generation in GameModel.java based on the design document. That includes: rocks, monsters, and a ladder. The ladder should be hidden under a rock. Ensure that there are no overlapping entities and that they are all within the bounds of the playing window. Do not implement anything else. 
 
+Result: Looks great! Plenty of rocks and monsters. I never set a range to generate them, maybe it's better to add it later. 
 
-Result: 
+Fixes: Nothing to fix yet.
 
-Fixes: 
-
-Observation: 
+Observation: Some rocks are half off the screen.
 
 ## Prompt 5: Basic Model Testing
 

@@ -37,6 +37,8 @@ public class GameModel {
         }
     }
 
+    private java.util.Random rand = new java.util.Random();
+
     public GameModel() {
         generateLevel();
     }
@@ -44,16 +46,74 @@ public class GameModel {
     public void generateLevel() {
         rocks.clear();
         monsters.clear();
-        
-        // Add some dummy entities for visual testing
-        rocks.add(new Entity(200, 200, 32, 32, EntityType.ROCK));
-        rocks.add(new Entity(240, 200, 32, 32, EntityType.ROCK));
-        
-        monsters.add(new Entity(400, 300, 32, 32, EntityType.SLIME));
-        monsters.add(new Entity(500, 100, 32, 32, EntityType.BAT));
-        
-        ladder = new Entity(300, 300, 32, 32, EntityType.LADDER);
-        ladderRevealed = true; // Show for testing
+        ladderRevealed = false;
+
+        // Reset player to top-left
+        playerX = 20;
+        playerY = 20;
+
+        // 1. Generate Rocks
+        int rockCount = 20 + rand.nextInt(15); 
+        for (int i = 0; i < rockCount; i++) {
+            Entity rock = createSafeEntity(EntityType.ROCK, 32, 32);
+            if (rock != null) rocks.add(rock);
+        }
+
+        // 2. Hide Ladder under a random rock
+        if (!rocks.isEmpty()) {
+            Entity hiddenUnder = rocks.get(rand.nextInt(rocks.size()));
+            hiddenUnder.containsLadder = true;
+            ladder = new Entity(hiddenUnder.x, hiddenUnder.y, 32, 32, EntityType.LADDER);
+        }
+
+        // 3. Generate Monsters
+        int monsterCount = 4 + rand.nextInt(4);
+        for (int i = 0; i < monsterCount; i++) {
+            EntityType type = rand.nextBoolean() ? EntityType.SLIME : EntityType.BAT;
+            Entity monster = createSafeEntity(type, 32, 32);
+            if (monster != null) monsters.add(monster);
+        }
+    }
+
+    private Entity createSafeEntity(EntityType type, float w, float h) {
+        int attempts = 0;
+        while (attempts < 100) {
+            float rx = rand.nextInt((int)(WORLD_WIDTH - w));
+            float ry = rand.nextInt((int)(WORLD_HEIGHT - h));
+
+            // Don't spawn on player
+            if (new Entity(rx, ry, w, h, type).intersects(playerX - 20, playerY - 20, PLAYER_SIZE + 40, PLAYER_SIZE + 40)) {
+                attempts++;
+                continue;
+            }
+
+            // Don't spawn on existing rocks
+            boolean overlaps = false;
+            for (Entity other : rocks) {
+                if (other.intersects(rx, ry, w, h)) {
+                    overlaps = true;
+                    break;
+                }
+            }
+            if (overlaps) {
+                attempts++;
+                continue;
+            }
+
+            // Don't spawn on existing monsters
+            for (Entity other : monsters) {
+                if (other.intersects(rx, ry, w, h)) {
+                    overlaps = true;
+                    break;
+                }
+            }
+
+            if (!overlaps) {
+                return new Entity(rx, ry, w, h, type);
+            }
+            attempts++;
+        }
+        return null;
     }
 
     public void updateMonsters() {
