@@ -34,11 +34,47 @@ public class GameView extends JFrame {
             g.setColor(new Color(40, 40, 40));
             g.fillRect(0, 0, getWidth(), getHeight());
 
-            // TODO: Draw Rocks & Monsters
-            
-            // Draw Player (Placeholder)
+            // Draw Hitbox (Visualization)
+            float[] hb = model.getHitbox();
+            g.setColor(new Color(255, 255, 0, 50));
+            g.fillRect((int)hb[0], (int)hb[1], (int)hb[2], (int)hb[3]);
+
+            // Draw Player (Dwarf)
             g.setColor(Color.GREEN);
-            g.fillRect((int)model.getPlayerX(), (int)model.getPlayerY(), 32, 32);
+            int px = (int)model.getPlayerX();
+            int py = (int)model.getPlayerY();
+            int size = (int)GameModel.PLAYER_SIZE;
+            g.fillRect(px, py, size, size);
+
+            // Draw Facing Triangle
+            g.setColor(Color.WHITE);
+            int[] tx = new int[3];
+            int[] ty = new int[3];
+            int tSize = 8;
+            
+            switch (model.getFacing()) {
+                case UP:
+                    tx[0] = px + size/2; ty[0] = py - tSize;
+                    tx[1] = px + size/2 - tSize; ty[1] = py;
+                    tx[2] = px + size/2 + tSize; ty[2] = py;
+                    break;
+                case DOWN:
+                    tx[0] = px + size/2; ty[0] = py + size + tSize;
+                    tx[1] = px + size/2 - tSize; ty[1] = py + size;
+                    tx[2] = px + size/2 + tSize; ty[2] = py + size;
+                    break;
+                case LEFT:
+                    tx[0] = px - tSize; ty[0] = py + size/2;
+                    tx[1] = px; ty[1] = py + size/2 - tSize;
+                    tx[2] = px; ty[2] = py + size/2 + tSize;
+                    break;
+                case RIGHT:
+                    tx[0] = px + size + tSize; ty[0] = py + size/2;
+                    tx[1] = px + size; ty[1] = py + size/2 - tSize;
+                    tx[2] = px + size; ty[2] = py + size/2 + tSize;
+                    break;
+            }
+            g.fillPolygon(tx, ty, 3);
 
             // Draw HUD
             drawHUD(g);

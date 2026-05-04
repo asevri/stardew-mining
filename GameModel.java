@@ -2,8 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameModel {
+    // Constants
+    public static final float PLAYER_SIZE = 32f;
+    public static final float WORLD_WIDTH = 800f;
+    public static final float WORLD_HEIGHT = 600f;
+
     // Player State
-    private float playerX, playerY;
+    private float playerX = 100, playerY = 100;
     private int health = 100;
     private int oreCount = 0;
     private int currentFloor = 1;
@@ -12,34 +17,111 @@ public class GameModel {
     public enum Direction { UP, DOWN, LEFT, RIGHT }
 
     // Entities
-    private List<Object> rocks = new ArrayList<>();
-    private List<Object> monsters = new ArrayList<>();
+    private List<Entity> rocks = new ArrayList<>();
+    private List<Entity> monsters = new ArrayList<>();
+
+    public static class Entity {
+        public float x, y, width, height;
+        public boolean isRock;
+        public Entity(float x, float y, float w, float h, boolean isRock) {
+            this.x = x; this.y = y; this.width = w; this.height = h;
+            this.isRock = isRock;
+        }
+        public boolean intersects(float ex, float ey, float ew, float eh) {
+            return x < ex + ew && x + width > ex && y < ey + eh && y + height > ey;
+        }
+    }
 
     public GameModel() {
         generateLevel();
     }
 
     public void generateLevel() {
-        // TODO: Randomly generate rocks and monsters
-        // TODO: Hide ladder under a random rock
-    }
-
-    public void updatePlayer(float dx, float dy) {
-        // TODO: Handle movement and 20% corner forgiveness logic
+        // Placeholder for now
     }
 
     public void updateMonsters() {
         // TODO: Handle AI pathing and aggro logic
     }
 
+    public void updatePlayer(float dx, float dy) {
+        if (dx > 0) facing = Direction.RIGHT;
+        else if (dx < 0) facing = Direction.LEFT;
+        else if (dy > 0) facing = Direction.DOWN;
+        else if (dy < 0) facing = Direction.UP;
+
+        float nextX = playerX + dx;
+        float nextY = playerY + dy;
+
+        // Collision & 20% Corner Forgiveness
+        boolean blockedX = false;
+        boolean blockedY = false;
+
+        for (Entity rock : rocks) {
+            if (rock.isRock) {
+                // Check X movement
+                if (rock.intersects(nextX, playerY, PLAYER_SIZE, PLAYER_SIZE)) {
+                    blockedX = true;
+                    // Forgiveness logic: If mostly past the rock vertically, slide
+                    float overlapTop = (playerY + PLAYER_SIZE) - rock.y;
+                    float overlapBottom = (rock.y + rock.height) - playerY;
+                    if (overlapTop < PLAYER_SIZE * 0.2f) playerY -= overlapTop;
+                    else if (overlapBottom < PLAYER_SIZE * 0.2f) playerY += overlapBottom;
+                }
+                // Check Y movement
+                if (rock.intersects(playerX, nextY, PLAYER_SIZE, PLAYER_SIZE)) {
+                    blockedY = true;
+                    // Forgiveness logic: If mostly past the rock horizontally, slide
+                    float overlapLeft = (playerX + PLAYER_SIZE) - rock.x;
+                    float overlapRight = (rock.x + rock.width) - playerX;
+                    if (overlapLeft < PLAYER_SIZE * 0.2f) playerX -= overlapLeft;
+                    else if (overlapRight < PLAYER_SIZE * 0.2f) playerX += overlapRight;
+                }
+            }
+        }
+
+        if (!blockedX) playerX = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_SIZE, nextX));
+        if (!blockedY) playerY = Math.max(0, Math.min(WORLD_HEIGHT - PLAYER_SIZE, nextY));
+    }
+
+    public void applyKnockback(float sourceX, float sourceY) {
+        float dx = playerX - sourceX;
+        float dy = playerY - sourceY;
+        float mag = (float)Math.sqrt(dx*dx + dy*dy);
+        if (mag == 0) return;
+        
+        // Push 2x size away
+        playerX += (dx / mag) * PLAYER_SIZE * 2;
+        playerY += (dy / mag) * PLAYER_SIZE * 2;
+        
+        // Clamp to screen
+        playerX = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_SIZE, playerX));
+        playerY = Math.max(0, Math.min(WORLD_HEIGHT - PLAYER_SIZE, playerY));
+    }
+
+    public float[] getHitbox() {
+        float hW = PLAYER_SIZE;
+        float hH = PLAYER_SIZE;
+        float hX = playerX;
+        float hY = playerY;
+
+        switch (facing) {
+            case UP:    hY -= PLAYER_SIZE; hH = PLAYER_SIZE * 2; break;
+            case DOWN:  hH = PLAYER_SIZE * 2; break;
+            case LEFT:  hX -= PLAYER_SIZE; hW = PLAYER_SIZE * 2; break;
+            case RIGHT: hW = PLAYER_SIZE * 2; break;
+        }
+        return new float[]{hX, hY, hW, hH};
+    }
+
     public void handleAction() {
-        // TODO: Use 2x hitbox to check for rock/monster interaction
+        float[] hb = getHitbox();
+        // TODO: Interaction check with entities in hb
     }
 
     public boolean isGameOver() { return health <= 0; }
     public boolean isWin() { return currentFloor >= 5 || oreCount >= 100; }
 
-    // Getters for View
     public float getPlayerX() { return playerX; }
     public float getPlayerY() { return playerY; }
     public int getHealth() { return health; }

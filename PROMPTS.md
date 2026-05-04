@@ -1,3 +1,11 @@
+## Implementation To Do List
+- Basic:
+    - Make sure player starts at the same position on every floor (top left corner).
+    - Add a wall around the playing window to prevent player from going off screen.
+- To Make It More Fun:
+    - Make a mine dark and only light up the area around the player.
+
+
 ## Prompt 1: The MVC Skeleton
 I am building Stardew Valley Mining in Java with Swing using MVC. Here is my spec:
 
@@ -47,13 +55,13 @@ Observation: The model took a step further by creating a player than expected.
 
 ## Prompt 2: Building the Model
 
-Implement the Physics & Combat Logic from the design document. Specifically, create the 2x hitbox for the player and implement the logic for knockback and 20% corner forgiveness on diagonal movement.
+Implement in GameModel.java the player's coordinates (x, y) for smooth movement and facing direction (UP, DOWN, LEFT, RIGHT) from the design document. To indicate facing direction, draw a triangle at the front of the player. Create the 2x hitbox for the player and implement the logic for knockback and 20% corner forgiveness on diagonal movement. Do not implement anything else.
 
-Result: 
+Result: Character can move with keys and direction player is facing is clear. 
 
-Fixes: 
+Fixes: The player no longer starts at the top left corner. Fix it later, not a priority.
 
-Observation:
+Observation: It might be bettwe to add a wall around the playing window to prevent player from going off screen. Implement it later.
 
 ## Prompt 3: Building the View
 
