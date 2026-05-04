@@ -6,42 +6,38 @@ You are controlling a dwarf inside a mine. The dwarf can move up, down, left, ri
 
 
 📋 Stardew Mining Game Specification
+
 1. Model (Data & Logic)
-    PlayerState:
+    - **PlayerState**: 
         - Coordinates (x, y) for smooth movement.
+        - Facing direction (UP, DOWN, LEFT, RIGHT).
         - Health (int) - starts at 100, Game Over at 0.
         - Ore Count (int) - starts at 0, Win at 100.
         - Current Floor (int) - starts at 1, Win at Floor 5.
-    Entity System:
-        - Rock: Has a position and a boolean containsLadder.
-        - Monster: Types (Slime, Bat). Has a position and an isAggro state triggered by player proximity.
-    Level Model:
-        - Manages a list of Rocks and Monsters for the current floor.
-        - Handles the "Hidden Ladder" logic (revealed when the specific rock is destroyed).
-    Game Rules: Logic for checking win/loss conditions (Health <= 0 or Floor == 5 or Ores == 100).
+    - **Entity System**:
+        - Rock: Square bounding box. Contains a boolean `containsLadder`.
+        - Monster: Types (Slime, Bat). Aggro state triggered by proximity.
+    - **Level Model**:
+        - Random generation of rocks and monsters per floor.
+        - Rules: No overlapping (Player/Rock/Monster). Everything must be inside the play window.
+        - Ladder hidden under one random rock.
+    - **Physics & Combat Logic**:
+        - Hitbox: 2x player size in the direction they are facing.
+        - Knockback: On monster contact, player and monster are pushed apart by 2x player size.
+        - Collision: Square bounding boxes. 20% "forgiveness" on corners for diagonal movement.
+
 2. View (User Interface & Rendering)
-    Main Game Window: A fixed-size JFrame (e.g., 800x600).
-    GamePanel (JPanel):
-        - Graphics: Custom paintComponent to draw the floor, player, rocks, and monsters.
-        - HUD (Heads-Up Display):
-            - Top-left: Text counter for "Ores Collected".
-            - Top-right: "Floor X" indicator.
-            - Bottom: Visual Health Bar (Green bar that shrinks).
-    State Screens:
-        - Game Over Screen: Displayed when health reaches zero.
-        - Win Screen: Displayed when floor 5 is reached or 100 ores are collected.
+    - **Main Game Window**: Fixed-size JFrame (800x600).
+    - **GamePanel (JPanel)**:
+        - Custom rendering for all entities.
+        - HUD: Ore counter (top-left), Floor indicator (top-right), Health bar (bottom).
+    - **Screens**:
+        - Win/Loss screens. 
+        - Conflict Rule: If win and loss happen simultaneously, display: "Winning does not matter if you die at the same time."
+
 3. Controller (Input & Coordination)
-    Input Handler:
-        - KeyListener to map Arrow Keys to player velocity (smooth movement).
-        - Spacebar listener to trigger the "Action" (checks for collision with rocks or monsters in range).
-    Game Loop:
-        - A javax.swing.Timer running at ~60 FPS.
-        - Update Cycle:
-            - Update player position based on velocity.
-            - Update monster AI (move toward player if within "aggro" radius).
-            - Check for collisions (Player/Monster contact deals damage).
-            - Trigger repaint() on the View.
-    Interaction Logic:
-        - When Spacebar is pressed:
-            - If a Rock is in range: Remove rock, add +1 to ore count, check if ladder is revealed.
-            - If a Monster is in range: Remove monster instantly.
+    - **Input**: Arrow keys (movement/facing) and Spacebar (action).
+    - **Game Loop**: 60 FPS Timer.
+    - **Updates**: Movement -> AI -> Collision -> Repaint.
+    - **Action Logic**: Spacebar triggers a check in the 2x hitbox area in front of the player.
+
