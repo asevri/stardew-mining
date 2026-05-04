@@ -6,13 +6,14 @@ public class GameView extends JFrame {
 
     public GameView() {
         setTitle("Stardew Mining");
-        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         setResizable(false);
 
         gamePanel = new GamePanel();
+        gamePanel.setPreferredSize(new Dimension(800, 600));
         add(gamePanel);
+        pack();
+        setLocationRelativeTo(null);
     }
 
     public void render(GameModel model) {
@@ -30,11 +31,15 @@ public class GameView extends JFrame {
             super.paintComponent(g);
             if (model == null) return;
 
+            // Background
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
+
             // Draw Walls
             for (GameModel.Entity wall : model.getWalls()) {
-                g.setColor(Color.BLACK);
+                g.setColor(new Color(101, 67, 33)); // Brown
                 g.fillRect((int)wall.x, (int)wall.y, (int)wall.width, (int)wall.height);
-                g.setColor(new Color(60, 60, 60));
+                g.setColor(new Color(70, 40, 20)); // Darker outline
                 g.drawRect((int)wall.x, (int)wall.y, (int)wall.width, (int)wall.height);
             }
 

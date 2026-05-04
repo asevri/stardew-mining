@@ -97,13 +97,24 @@ Fixes: Fix wall (only 3 out of 4 walls show up). Revert background to black.
 Observation: AI took some liberties to jump ahead anyway.
 
 ## Prompt 6: Adding Wall
-Add a wall around the playing window to prevent player from going off screen, and generate rocks/monsters inside the walls. If the player hits a wall with an axe, nothing should happen.
+Add a wall around the playing window to prevent player from going off screen, and make sure generated rocks/monsters stay inside the walls. If the player hits a wall with an axe, nothing should happen. Make playing background black again. Make wall brown color. Do not implement anything else.
+
+Result: Fixed the wall and colors.
+
+Fixes: None
+
+Observation: No new liberties were taken this time.
+
+## Prompt 7: Implement Monster AI
+Implement basic AI for slimes and bats in GameModel.java. Make them randomly move around the screen. Do not implement anything else.
 
 Result: 
 
 Fixes: 
 
 Observation: 
+
+££
 
 ## Prompt : Basic Model Testing
 
