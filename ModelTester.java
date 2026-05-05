@@ -100,6 +100,7 @@ public class ModelTester {
         model.generateLevel();
         // Clear obstacles for clean test
         model.getRocks().clear();
+        model.getMonsters().clear();
         // Place monster within aggro range (5x player size = 160px)
         GameModel.Entity slime = new GameModel.Entity(model.getPlayerX() + 100, model.getPlayerY(), 32, 32, GameModel.EntityType.SLIME);
         model.getMonsters().add(slime);

@@ -331,7 +331,16 @@ Fixes: Monster AI & Obstacles test still fails due to intermittent failure due t
 
 Observation: I could tell from the begining that monster logic might be dificult due to so many interactions. 
 
-## Prompt 20: Adding Darkness
+## Prompt 20: Testing Cont.
+Fix failed test for Monster AI & Obstacles test. Do not change anything else. List your tests and their expected results.
+
+Result: Edge case was fixed.
+
+Fixes: None
+
+Observation: None
+
+## Prompt 21: Adding Darkness
 
 Result: 
 
