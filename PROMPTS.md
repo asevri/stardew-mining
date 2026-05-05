@@ -254,13 +254,23 @@ Fixes: None
 
 Observation: AI said it was already capped at zero previously. Not sure if it's true.
 
-## Prompt 12: Add Monster Kill Counter
+## Prompt 13: Knockback Interaction Between Monsters
+Fix knockback interaction between monsters. If a monster is pushed against another monster, it should stop there and not slide along it or pass through it. Do not implement anything else.
 
-Result: 
+Result: "Stuck together" monsters now bounce off each other.
 
-Fixes: 
+Fixes: None
 
-Observation:
+Observation: None
+
+## Prompt 14: Add Monster Kill Counter
+In the GameModel.java add a counter for the number of monsters killed. In the GameView.java display it in the HUD. When a monster is killed, increment the counter. Do not implement anything else.
+
+Result: Added count
+
+Fixes: None
+
+Observation: None
 
 ## Prompt 13: Add 10 min Timer
 

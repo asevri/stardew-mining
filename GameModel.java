@@ -11,6 +11,7 @@ public class GameModel {
     private float playerX = 100, playerY = 100;
     private int health = 100;
     private int oreCount = 0;
+    private int monstersKilled = 0;
     private int currentFloor = 1;
     private Direction facing = Direction.DOWN;
 
@@ -180,6 +181,9 @@ public class GameModel {
 
                     List<Entity> obstacles = new ArrayList<>(rocks);
                     obstacles.addAll(walls);
+                    for (int j = 0; j < monsters.size(); j++) {
+                        if (i != j) obstacles.add(monsters.get(j));
+                    }
 
                     for (Entity obs : obstacles) {
                         if (obs.intersects(nextMX, m.y, m.width, m.height)) blockedMX = true;
@@ -312,6 +316,7 @@ public class GameModel {
             Entity m = monsters.get(i);
             if (m.intersects(hb[0], hb[1], hb[2], hb[3])) {
                 monsters.remove(i);
+                monstersKilled++;
                 return; // Hit one monster per swing
             }
         }
@@ -319,6 +324,7 @@ public class GameModel {
 
     public List<Entity> getWalls() { return walls; }
     public boolean isSwinging() { return axeTimer > 0; }
+    public int getMonstersKilled() { return monstersKilled; }
 
     public boolean isGameOver() { return health <= 0; }
     public boolean isWin() { return currentFloor >= 5 || oreCount >= 100; }

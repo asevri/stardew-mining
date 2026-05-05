@@ -108,6 +108,7 @@ public class GameView extends JFrame {
             g.setFont(new Font("Arial", Font.BOLD, 16));
             g.setColor(Color.WHITE);
             g.drawString("Ores: " + model.getOreCount(), 20, 30);
+            g.drawString("Monsters Killed: " + model.getMonstersKilled(), 20, 55);
             g.drawString("Floor: " + model.getCurrentFloor(), 700, 30);
 
             // Health Bar
