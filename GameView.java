@@ -109,6 +109,14 @@ public class GameView extends JFrame {
             g.setColor(Color.WHITE);
             g.drawString("Ores: " + model.getOreCount(), 20, 30);
             g.drawString("Monsters Killed: " + model.getMonstersKilled(), 20, 55);
+            
+            // Draw Timer
+            int totalSec = model.getTimeLeft() / 60;
+            int min = totalSec / 60;
+            int sec = totalSec % 60;
+            String timeStr = String.format("Time: %02d:%02d", min, sec);
+            g.drawString(timeStr, 350, 30);
+            
             g.drawString("Floor: " + model.getCurrentFloor(), 700, 30);
 
             // Health Bar
@@ -132,7 +140,7 @@ public class GameView extends JFrame {
                 g.setFont(new Font("Arial", Font.BOLD, 25));
                 msg = "Winning does not matter if you die at the same time.";
             } else if (model.isGameOver()) {
-                msg = "GAME OVER";
+                msg = model.isTimeUp() ? "TIME'S UP!" : "GAME OVER";
             } else if (model.isWin()) {
                 msg = "YOU WIN!";
             }

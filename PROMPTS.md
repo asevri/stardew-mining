@@ -273,12 +273,13 @@ Fixes: None
 Observation: None
 
 ## Prompt 13: Add 10 min Timer
+Add a 10 minute timer to the game. When the timer reaches 0, the player loses and screen displays "TIME'S UP!". Add timer to the game loop. In HUD add the current time as minutes and seconds. Do not implement anything else.
 
-Result: 
+Result: Timer added.
 
-Fixes: 
+Fixes: None
 
-Observation:
+Observation: None
 
 ## Prompt 14: Testing The Game
 

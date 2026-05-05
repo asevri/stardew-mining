@@ -13,6 +13,7 @@ public class GameModel {
     private int oreCount = 0;
     private int monstersKilled = 0;
     private int currentFloor = 1;
+    private int timeLeft = 600 * 60; // 10 minutes @ 60fps
     private Direction facing = Direction.DOWN;
 
     public enum Direction { UP, DOWN, LEFT, RIGHT }
@@ -322,11 +323,17 @@ public class GameModel {
         }
     }
 
+    public void updateTimer() {
+        if (timeLeft > 0) timeLeft--;
+    }
+
     public List<Entity> getWalls() { return walls; }
     public boolean isSwinging() { return axeTimer > 0; }
     public int getMonstersKilled() { return monstersKilled; }
+    public int getTimeLeft() { return timeLeft; }
+    public boolean isTimeUp() { return timeLeft <= 0; }
 
-    public boolean isGameOver() { return health <= 0; }
+    public boolean isGameOver() { return health <= 0 || timeLeft <= 0; }
     public boolean isWin() { return currentFloor >= 5 || oreCount >= 100; }
 
     public List<Entity> getRocks() { return rocks; }
