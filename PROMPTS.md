@@ -272,7 +272,7 @@ Fixes: None
 
 Observation: None
 
-## Prompt 13: Add 10 min Timer
+## Prompt 15: Add 10 min Timer
 Add a 10 minute timer to the game. When the timer reaches 0, the player loses and screen displays "TIME'S UP!". Add timer to the game loop. In HUD add the current time as minutes and seconds. Do not implement anything else.
 
 Result: Timer added.
@@ -281,15 +281,27 @@ Fixes: None
 
 Observation: None
 
-## Prompt 14: Testing The Game
+## Prompt 16: Testing The Game
+Test my game and let me know if you find any bugs. Do not fix any bugs, just list them. Do not implement anything. 
 
-Result: 
+Result: Response:
+- Diagonal Movement Speed: The player moves significantly faster (~41%) when walking diagonally (e.g., Up + Right) compared to walking in a straight line. This is because the X and Y velocities are both applied at full strength simultaneously.
 
-Fixes: 
+- Axe Target Priority: The axe can only hit one entity per swing. Because the logic checks rocks before monsters and returns immediately, if a monster is overlapping a rock, the player will break the rock but the monster will remain unharmed, even if both are in the hitbox.
 
-Observation:
+- The "Corner Trap" Instant Death: If both the player and a monster are trapped against a wall or in a corner, the knockback logic may be unable to push them apart (since both are blocked by the wall). Because there is no "invincibility period" after taking damage, the player will lose 10 health every single frame (~600 damage per second), resulting in instant death.
 
-## Prompt 15: Adding Darkness
+- Axe Spamming: There is currently no cooldown on the axe swing. A player can "spam" the spacebar to break multiple rocks or kill multiple monsters in a fraction of a second, which trivializes the mining speed.
+
+- Monster Spawn on Ladder: While monsters cannot spawn on top of rocks, the current createSafeEntity logic does not explicitly check for the ladder entity. If a rock containing the ladder is broken, a monster could potentially be standing directly on the ladder, making it difficult to transition floors without a fight.
+
+- HUD Text Overlap: On very busy levels, the "Ores" and "Monsters Killed" text in the top-left corner can become difficult to read if dark brown walls or rocks are generated directly behind the white text.
+
+Fixes: I might consider implementing some of these for better gameplay experience but I don't think any of these are major failures at the moment. I need to test different parts of the game first and get basics solidified. 
+
+Observation: Some of these are trivial failures and not really bugs. For example, axe spamming.
+
+## Prompt 17: Adding Darkness
 
 Result: 
 
