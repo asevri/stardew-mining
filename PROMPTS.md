@@ -245,13 +245,14 @@ Fixes: None
 
 Observation: None
 
-## Prompt 11: Fix Health Bar To Not Go Past Zero
+## Prompt 12: Fix Health Bar To Not Go Past Zero
+Fix health bar so it doesn't go past zero. When health reaches 0, it should stop there and not go negative. Do not implement anything else.
 
-Result: 
+Result: Health bar no longer goes past zero.
 
-Fixes: 
+Fixes: None
 
-Observation:
+Observation: AI said it was already capped at zero previously. Not sure if it's true.
 
 ## Prompt 12: Add Monster Kill Counter
 

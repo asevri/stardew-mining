@@ -330,7 +330,7 @@ public class GameModel {
     
     public float getPlayerX() { return playerX; }
     public float getPlayerY() { return playerY; }
-    public int getHealth() { return health; }
+    public int getHealth() { return Math.max(0, health); }
     public int getOreCount() { return oreCount; }
     public int getCurrentFloor() { return currentFloor; }
     public Direction getFacing() { return facing; }
