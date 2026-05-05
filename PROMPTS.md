@@ -348,3 +348,12 @@ Result: Added darkness effect as I wanted.
 Fixes: None
 
 Observation: Makes game a lot more dificult and fun. I like it.
+
+## Prompt 22: Adding Restart 
+Add restart ability using R key. Add text on next line "Press R to restart" to all winning and losing screens. Do not implement anything else.
+
+Result: Added restart ability.
+
+Fixes: None
+
+Observation: None

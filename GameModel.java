@@ -347,4 +347,14 @@ public class GameModel {
     public int getOreCount() { return oreCount; }
     public int getCurrentFloor() { return currentFloor; }
     public Direction getFacing() { return facing; }
+
+    public void reset() {
+        health = 100;
+        oreCount = 0;
+        monstersKilled = 0;
+        currentFloor = 1;
+        timeLeft = 600 * 60;
+        facing = Direction.DOWN;
+        generateLevel();
+    }
 }

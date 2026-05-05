@@ -173,6 +173,14 @@ public class GameView extends JFrame {
             int x = (getWidth() - fm.stringWidth(msg)) / 2;
             int y = (getHeight() / 2);
             g.drawString(msg, x, y);
+
+            // Restart Instruction
+            g.setFont(new Font("Arial", Font.BOLD, 20));
+            String restartMsg = "Press R to restart";
+            fm = g.getFontMetrics();
+            int rx = (getWidth() - fm.stringWidth(restartMsg)) / 2;
+            int ry = y + 40;
+            g.drawString(restartMsg, rx, ry);
         }
     }
 }

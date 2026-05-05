@@ -58,6 +58,13 @@ public class GameController implements KeyListener, ActionListener {
         if (key == KeyEvent.VK_SPACE) {
             model.handleAction();
         }
+
+        if (key == KeyEvent.VK_R) {
+            model.reset();
+            if (!gameLoop.isRunning()) {
+                gameLoop.start();
+            }
+        }
     }
 
     @Override
