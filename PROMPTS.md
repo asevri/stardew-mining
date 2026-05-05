@@ -341,9 +341,10 @@ Fixes: None
 Observation: None
 
 ## Prompt 21: Adding Darkness
+I want to add darkness effect to the game. Player can see up to 5 tiles in all directions. Make black gradient for two tiles away from player until they become black. Everything else is black. Do not implement anything else.
 
-Result: 
+Result: Added darkness effect as I wanted.
 
-Fixes: 
+Fixes: None
 
-Observation: 
+Observation: Makes game a lot more dificult and fun. I like it.

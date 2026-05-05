@@ -95,6 +95,9 @@ public class GameView extends JFrame {
             }
             g.fillPolygon(tx, ty, 3);
 
+            // Darkness Effect
+            drawDarkness((Graphics2D)g);
+
             // Draw HUD
             drawHUD(g);
 
@@ -102,6 +105,27 @@ public class GameView extends JFrame {
             if (model.isGameOver() || model.isWin()) {
                 drawEndScreen(g);
             }
+        }
+
+        private void drawDarkness(Graphics2D g2) {
+            float playerCenterX = model.getPlayerX() + GameModel.PLAYER_SIZE / 2;
+            float playerCenterY = model.getPlayerY() + GameModel.PLAYER_SIZE / 2;
+            float radius = 5 * 32f; // 5 tiles
+
+            // Fractions: 0.0 (center), 0.4 (2 tiles / 5 tiles), 1.0 (5 tiles)
+            float[] fractions = {0.0f, 0.4f, 1.0f};
+            Color[] colors = {new Color(0, 0, 0, 0), new Color(0, 0, 0, 0), new Color(0, 0, 0, 255)};
+
+            RadialGradientPaint paint = new RadialGradientPaint(
+                playerCenterX, playerCenterY, radius, fractions, colors, MultipleGradientPaint.CycleMethod.NO_CYCLE
+            );
+
+            g2.setPaint(paint);
+            
+            // Fill the entire screen except for the gradient hole
+            // Actually, RadialGradientPaint with NO_CYCLE will keep the last color (Black) outside the radius.
+            // So we just fill the whole screen.
+            g2.fillRect(0, 0, getWidth(), getHeight());
         }
 
         private void drawHUD(Graphics g) {
