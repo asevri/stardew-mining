@@ -164,13 +164,30 @@ public class GameModel {
                 health = Math.max(0, health - 10);
                 applyKnockback(m.x, m.y);
                 
-                // Knockback monster away from player
+                // Knockback monster away from player (with collision check)
                 float kx = m.x - playerX;
                 float ky = m.y - playerY;
                 float kMag = (float)Math.sqrt(kx*kx + ky*ky);
                 if (kMag > 0) {
-                    m.x += (kx / kMag) * PLAYER_SIZE * 2;
-                    m.y += (ky / kMag) * PLAYER_SIZE * 2;
+                    float pushX = (kx / kMag) * PLAYER_SIZE * 2;
+                    float pushY = (ky / kMag) * PLAYER_SIZE * 2;
+                    
+                    float nextMX = m.x + pushX;
+                    float nextMY = m.y + pushY;
+
+                    boolean blockedMX = false;
+                    boolean blockedMY = false;
+
+                    List<Entity> obstacles = new ArrayList<>(rocks);
+                    obstacles.addAll(walls);
+
+                    for (Entity obs : obstacles) {
+                        if (obs.intersects(nextMX, m.y, m.width, m.height)) blockedMX = true;
+                        if (obs.intersects(m.x, nextMY, m.width, m.height)) blockedMY = true;
+                    }
+
+                    if (!blockedMX) m.x = nextMX;
+                    if (!blockedMY) m.y = nextMY;
                 }
             }
         }
@@ -237,13 +254,27 @@ public class GameModel {
         float mag = (float)Math.sqrt(dx*dx + dy*dy);
         if (mag == 0) return;
         
-        // Push 2x size away
-        playerX += (dx / mag) * PLAYER_SIZE * 2;
-        playerY += (dy / mag) * PLAYER_SIZE * 2;
+        // Calculate intended knockback distance (2x player size)
+        float pushX = (dx / mag) * PLAYER_SIZE * 2;
+        float pushY = (dy / mag) * PLAYER_SIZE * 2;
         
-        // Clamp to screen
-        playerX = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_SIZE, playerX));
-        playerY = Math.max(0, Math.min(WORLD_HEIGHT - PLAYER_SIZE, playerY));
+        float nextX = playerX + pushX;
+        float nextY = playerY + pushY;
+
+        // Verify if the knockback path is clear
+        List<Entity> solidEntities = new ArrayList<>(rocks);
+        solidEntities.addAll(walls);
+
+        boolean blockedX = false;
+        boolean blockedY = false;
+
+        for (Entity solid : solidEntities) {
+            if (solid.intersects(nextX, playerY, PLAYER_SIZE, PLAYER_SIZE)) blockedX = true;
+            if (solid.intersects(playerX, nextY, PLAYER_SIZE, PLAYER_SIZE)) blockedY = true;
+        }
+
+        if (!blockedX) playerX = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_SIZE, nextX));
+        if (!blockedY) playerY = Math.max(0, Math.min(WORLD_HEIGHT - PLAYER_SIZE, nextY));
     }
 
     public float[] getHitbox() {
