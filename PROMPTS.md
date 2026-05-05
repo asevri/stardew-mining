@@ -308,9 +308,30 @@ Result: It created ModelTester.java with all tests listed in the prompt.
 
 Fixes: None, it passed all the tests I listed.
 
-Observation: None.
+Observation: I have been using the same chat for a long time and it has been going too smoothly. I'm starting to get suspicious the model might be not doing a thorough job. I will start new chat and try running the tester again.
 
-## Prompt 18: Adding Darkness
+## Prompt 18: Testing Cont.
+I am working on Stardew Valley Mining mini game. Test my game with ModelTester.java and list all bugs you find. Do not fix any bugs. Just list them. Do not implement anything.
+
+Result: ModelTester.java had some incompletness:
+- Reachable Ladder Verification: It only checks if a ladder exists, not if it is reachable by the player.
+- Monster/Wall Collisions: It clears all rocks before testing monster movement, failing to verify if monsters are actually blocked by obstacles.
+- No-Spawn Guarantee: It does not verify the safety of the ladder if createSafeEntity fails to place rocks. 
+
+Fixes: I would like to add pointed out tests to ModelTester.java.
+
+Observation: The previous chat did a decent job but I guess missed some things as I was asking to complete a completely new task from previous chats.
+
+## Prompt 19: Testing Cont.
+Complete ModelTester.java with tests originally listed but not implemented in the previous version of ModelTester.java. That includes reachable ladder, monster/wall collisions, no-spawn guarantee. Do not modify the original code. List your tests and their expected results.
+
+Result: Monster logic had some issues, it ran through two itterations to fix failed monster tests. 
+
+Fixes: Monster AI & Obstacles test still fails due to intermittent failure due to monster-on-monster blocking
+
+Observation: I could tell from the begining that monster logic might be dificult due to so many interactions. 
+
+## Prompt 20: Adding Darkness
 
 Result: 
 

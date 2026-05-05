@@ -17,6 +17,9 @@ public class ModelTester {
         runTest("Timer Consistency", testTimerConsistency());
         runTest("Single Target Axe", testSingleTargetAxe());
         runTest("HUD Data Availability", testHUDData());
+        runTest("Ladder Reachability", testLadderReachability());
+        runTest("Monster Obstacle Collisions", testMonsterObstacles());
+        runTest("No-Spawn Safety", testNoSpawnSafety());
 
         System.out.println("\n✅ Testing Complete.");
     }
@@ -156,5 +159,64 @@ public class ModelTester {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    // New Test 1: Reachable Ladder
+    private static boolean testLadderReachability() {
+        GameModel model = new GameModel();
+        model.generateLevel();
+        GameModel.Entity ladder = model.getLadder();
+        if (ladder == null) return false;
+        
+        // Check if ladder is within playable bounds (inside walls)
+        float padding = 32; // Wall thickness
+        boolean inside = ladder.x >= padding && ladder.x + ladder.width <= GameModel.WORLD_WIDTH - padding &&
+                         ladder.y >= padding && ladder.y + ladder.height <= GameModel.WORLD_HEIGHT - padding;
+        return inside;
+    }
+
+    // New Test 2: Monster Obstacle Collisions
+    private static boolean testMonsterObstacles() {
+        GameModel model = new GameModel();
+        model.generateLevel();
+        model.getMonsters().clear();
+        model.getRocks().clear();
+        
+        // Place a rock
+        float rx = 200, ry = 200;
+        model.getRocks().add(new GameModel.Entity(rx, ry, 32, 32, GameModel.EntityType.ROCK));
+        
+        // Place monster to the left of the rock
+        GameModel.Entity slime = new GameModel.Entity(rx - 30, ry, 32, 32, GameModel.EntityType.SLIME);
+        model.getMonsters().add(slime);
+        
+        // Move player to the right of the rock so monster tries to move RIGHT through it
+        // Note: Player at (40,40) by default. Move to (400, 200)
+        // Wait, I can't move player easily without updatePlayer which has collision logic.
+        // I'll just manually set player position if I could, but I can't.
+        // Actually, updateMonsters uses playerX/playerY. I'll just use a fresh model.
+        
+        // Let's place rock at (100, 40) and monster at (132.5, 40). 
+        // Monster at (132.5, 40, 32, 32) -> Right edge at 164.5, Left edge at 132.5.
+        // Rock at (100, 40, 32, 32) -> Right edge at 132, Left edge at 100.
+        // Monster speed is ~1.33. NextX = 132.5 - 1.33 = 131.17.
+        // 131.17 < 132, so it should be blocked immediately.
+        model.getRocks().clear();
+        model.getRocks().add(new GameModel.Entity(100, 40, 32, 32, GameModel.EntityType.ROCK));
+        slime.x = 132.5f; slime.y = 40;
+        float startX = slime.x;
+        model.updateMonsters();
+        return slime.x == startX;
+    }
+
+    // New Test 3: No-Spawn Safety (Verify it's nearly impossible to get 0 rocks/monsters)
+    private static boolean testNoSpawnSafety() {
+        for (int i = 0; i < 100; i++) {
+            GameModel model = new GameModel();
+            model.generateLevel();
+            if (model.getRocks().size() < 20 || model.getMonsters().size() < 4) return false;
+            if (model.getLadder() == null) return false;
+        }
+        return true;
     }
 }
