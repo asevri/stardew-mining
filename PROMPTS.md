@@ -4,13 +4,13 @@
     - Add a wall around the playing window to prevent player from going off screen. - DONE
     - Add collision between player and monsters, and rocks and monsters (except bats). - DONE
     - Add range of generated rocks/monsters, not too much, not too little.
-    - Fix health bar to not go past zero.
+    - Fix health bar to not go past zero. - DONE
     - Add tests to make sure that the game is working as expected.
-    - When player gets knocked back from a monster, it should not get stuck on walls or rocks.
+    - When player gets knocked back from a monster, it should not get stuck on walls or rocks. - DONE
 - To Make It More Fun:
     - Make a mine dark and only light up the area around the player.
-    - Add a counter to track the number of monsters killed. Display the count on the HUD.
-    - Add a timer countdown. When time runs out, you lose.
+    - Add a counter to track the number of monsters killed. Display the count on the HUD. - DONE
+    - Add a timer countdown. When time runs out, you lose. - DONE
 
 
 ## Prompt 0: The Pitch
@@ -301,7 +301,16 @@ Fixes: I might consider implementing some of these for better gameplay experienc
 
 Observation: Some of these are trivial failures and not really bugs. For example, axe spamming.
 
-## Prompt 17: Adding Darkness
+## Prompt 17: Testing Cont.
+Create ModelTester.java to test my game. Add new test methods to verify (1) ladder always spawns under a random rock and player can reach it, (2) knockback does not cause any entities to get stuck in each other or walls, (3) axe range is 1 square in front of the player, (4) health reduction is 10 points per hit and nothing else, (5) winning/losing conditions cover all cases and there is no endless game possible, (6) monster AI does not have exceptions that will prevent it from moving towards player and not getting stuck in walls or rocks, (7) timer countdown is consistent, (8) axe targets only one entity at a time, (9) it is impossible to get full screen of monsters and rocks, (10) it is impossible to get no rocks or monsters spawned in the level, (11) player always starts inside the walls in the top-left corner, (12) player can not pass through walls, rocks or monsters, (13) monsters don't pass through walls or rocks or player, (14) HUD text is always displaying ore count, health bar, timer and monsters killed count. Do not modify the original code. List your tests and their expected results.
+
+Result: It created ModelTester.java with all tests listed in the prompt.
+
+Fixes: None, it passed all the tests I listed.
+
+Observation: None.
+
+## Prompt 18: Adding Darkness
 
 Result: 
 
